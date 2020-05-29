@@ -1,0 +1,11 @@
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\bin\Debug\netcoreapp3.0\NotDeadSpace.exe
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\bin\Debug\netcoreapp3.0\NotDeadSpace.deps.json
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\bin\Debug\netcoreapp3.0\NotDeadSpace.runtimeconfig.json
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\bin\Debug\netcoreapp3.0\NotDeadSpace.runtimeconfig.dev.json
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\bin\Debug\netcoreapp3.0\NotDeadSpace.dll
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\bin\Debug\netcoreapp3.0\NotDeadSpace.pdb
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\obj\Debug\netcoreapp3.0\NotDeadSpace.csprojAssemblyReference.cache
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\obj\Debug\netcoreapp3.0\NotDeadSpace.AssemblyInfoInputs.cache
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\obj\Debug\netcoreapp3.0\NotDeadSpace.AssemblyInfo.cs
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\obj\Debug\netcoreapp3.0\NotDeadSpace.dll
+C:\Users\fefem\source\repos\NotDeadSpace\NotDeadSpace\obj\Debug\netcoreapp3.0\NotDeadSpace.pdb
