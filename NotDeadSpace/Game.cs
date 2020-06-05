@@ -6,10 +6,17 @@ namespace NotDeadSpace
 {
     class Game
     {
+        enum TileType
+        {
+            Wall,
+            Floor
+        }
+
         int x = 0;
         int y = 0;
         List<Item> inventory = new List<Item>();
         List<Item> worldItems = new List<Item>();
+        TileType[,] map = new TileType[10, 10];
 
         bool inGame = true;
 
@@ -18,15 +25,53 @@ namespace NotDeadSpace
             Item tessera = new Item("Tessera d'accesso", 0, 0f);
             tessera.SetPosition(5, 5);
 
+            x = 2;
+            y = 3;
+
+            for (int mapY = 1; mapY < map.GetLength(1) - 1; mapY++)
+            {
+                for (int mapX = 1; mapX < map.GetLength(0) - 1; mapX++)
+                {
+                    map[mapX, mapY] = TileType.Floor;
+                }
+            }
+
             worldItems.Add(tessera);
+        }
+
+        void DrawMap()
+        {
+            for (int mapY = 0; mapY < map.GetLength(1); mapY++)
+            {
+                for (int mapX = 0; mapX < map.GetLength(0); mapX++)
+                {
+                    if (mapX == x && mapY == y)
+                    {
+                        Console.Write("+");
+                    }
+                    else
+                    {
+                        switch (map[mapX, mapY])
+                        {
+                            case TileType.Wall:
+                                Console.Write("#");
+                                break;
+
+                            case TileType.Floor:
+                                Console.Write(".");
+                                break;
+                        }
+                    }
+                }
+                Console.WriteLine();
+            }
         }
 
         void Render()
         {
             Console.Clear();
 
-            Console.WriteLine("X: " + x);
-            Console.WriteLine("Y: " + y);
+            DrawMap();
 
             foreach(Item item in worldItems)
             {
@@ -39,6 +84,13 @@ namespace NotDeadSpace
 
         void Input()
         {
+            Console.WriteLine();
+            Console.WriteLine("Tasti direzionali: Muoviti");
+            Console.WriteLine("I: Inventario");
+            Console.WriteLine("R: Raccogli oggetti");
+            Console.WriteLine("ESC: Esci");
+            Console.WriteLine();
+
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             
             if (keyInfo.Key == ConsoleKey.Escape)
@@ -47,19 +99,31 @@ namespace NotDeadSpace
             }
             else if (keyInfo.Key == ConsoleKey.W || keyInfo.Key == ConsoleKey.UpArrow)
             {
-                y++;
+                if (y > 0 && map[x, y - 1] == TileType.Floor)
+                {
+                    y--;
+                }
             }
             else if (keyInfo.Key == ConsoleKey.S || keyInfo.Key == ConsoleKey.DownArrow)
             {
-                y--;
+                if (y < map.GetLength(1) - 1 && map[x, y + 1] == TileType.Floor)
+                {
+                    y++;
+                }
             }
             else if (keyInfo.Key == ConsoleKey.A || keyInfo.Key == ConsoleKey.LeftArrow)
             {
-                x--;
+                if (x > 0 && map[x - 1, y] == TileType.Floor)
+                {
+                    x--;
+                }
             }
             else if (keyInfo.Key == ConsoleKey.D || keyInfo.Key == ConsoleKey.RightArrow)
             {
-                x++;
+                if (x < map.GetLength(0) - 1 && map[x + 1, y] == TileType.Floor)
+                {
+                    x++;
+                }
             }
             else if (keyInfo.Key == ConsoleKey.I)
             {
