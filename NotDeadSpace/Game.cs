@@ -12,10 +12,10 @@ namespace NotDeadSpace
             Floor
         }
 
-        int x = 0;
-        int y = 0;
+        Player player = new Player();
         List<Item> inventory = new List<Item>();
         List<Item> worldItems = new List<Item>();
+        List<Alien> aliens = new List<Alien>();
         TileType[,] map = new TileType[10, 10];
 
         bool inGame = true;
@@ -25,8 +25,8 @@ namespace NotDeadSpace
             Item tessera = new Item("Tessera d'accesso", 0, 0f);
             tessera.SetPosition(5, 5);
 
-            x = 2;
-            y = 3;
+            player.x = 2;
+            player.y = 3;
 
             for (int mapY = 1; mapY < map.GetLength(1) - 1; mapY++)
             {
@@ -36,7 +36,34 @@ namespace NotDeadSpace
                 }
             }
 
+            aliens.Add(new Alien(6, 5));
             worldItems.Add(tessera);
+        }
+
+        bool IsThereAnItemHere(int mapX, int mapY)
+        {
+            foreach(Item item in worldItems)
+            {
+                if (item.x == mapX && item.y == mapY)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        bool IsThereAnAlienHere(int mapX, int mapY)
+        {
+            foreach(Alien alien in aliens)
+            {
+                if (alien.x == mapX && alien.y == mapY)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         void DrawMap()
@@ -45,9 +72,17 @@ namespace NotDeadSpace
             {
                 for (int mapX = 0; mapX < map.GetLength(0); mapX++)
                 {
-                    if (mapX == x && mapY == y)
+                    if (player.IsHere(mapX, mapY))
                     {
                         Console.Write("+");
+                    }
+                    else if (IsThereAnAlienHere(mapX, mapY))
+                    {
+                        Console.Write("!");
+                    }
+                    else if (IsThereAnItemHere(mapX, mapY))
+                    {
+                        Console.Write("o");
                     }
                     else
                     {
@@ -72,10 +107,13 @@ namespace NotDeadSpace
             Console.Clear();
 
             DrawMap();
+            
+            Console.WriteLine();
+            Console.WriteLine(string.Format("PF: {0}/{1}", player.life, player.maxLife));
 
             foreach(Item item in worldItems)
             {
-                if (item.x == x && item.y == y)
+                if (item.x == player.x && item.y == player.y)
                 {
                     Console.WriteLine("Qui c'è: " + item.name);
                 }
@@ -99,30 +137,30 @@ namespace NotDeadSpace
             }
             else if (keyInfo.Key == ConsoleKey.W || keyInfo.Key == ConsoleKey.UpArrow)
             {
-                if (y > 0 && map[x, y - 1] == TileType.Floor)
+                if (player.y > 0 && map[player.x, player.y - 1] == TileType.Floor)
                 {
-                    y--;
+                    player.y--;
                 }
             }
             else if (keyInfo.Key == ConsoleKey.S || keyInfo.Key == ConsoleKey.DownArrow)
             {
-                if (y < map.GetLength(1) - 1 && map[x, y + 1] == TileType.Floor)
+                if (player.y < map.GetLength(1) - 1 && map[player.x, player.y + 1] == TileType.Floor)
                 {
-                    y++;
+                    player.y++;
                 }
             }
             else if (keyInfo.Key == ConsoleKey.A || keyInfo.Key == ConsoleKey.LeftArrow)
             {
-                if (x > 0 && map[x - 1, y] == TileType.Floor)
+                if (player.x > 0 && map[player.x - 1, player.y] == TileType.Floor)
                 {
-                    x--;
+                    player.x--;
                 }
             }
             else if (keyInfo.Key == ConsoleKey.D || keyInfo.Key == ConsoleKey.RightArrow)
             {
-                if (x < map.GetLength(0) - 1 && map[x + 1, y] == TileType.Floor)
+                if (player.x < map.GetLength(0) - 1 && map[player.x + 1, player.y] == TileType.Floor)
                 {
-                    x++;
+                    player.x++;
                 }
             }
             else if (keyInfo.Key == ConsoleKey.I)
@@ -143,7 +181,7 @@ namespace NotDeadSpace
 
             foreach (Item item in worldItems)
             {
-                if (item.x == x && item.y == y)
+                if (item.x == player.x && item.y == player.y)
                 {
                     inventory.Add(item);
                     itemsToRemove.Add(item); // Non posso fare worldItems.Remove perché il ciclo foreach è sulla lista worldItems
@@ -179,6 +217,48 @@ namespace NotDeadSpace
             Console.ReadKey(true);
         }
 
+        void AI()
+        {
+            foreach (Alien alien in aliens)
+            {
+                if (Math.Abs(alien.x - player.x) <= 1 && Math.Abs(alien.y - player.y) <= 1)
+                {
+                    player.life -= alien.damage;
+                }
+                else
+                {
+                    if (alien.x > player.x)
+                    {
+                        alien.x--;
+                    }
+                    else if (alien.x < player.x)
+                    {
+                        alien.x++;
+                    }
+
+                    if (alien.y > player.y)
+                    {
+                        alien.y--;
+                    }
+                    else if (alien.y < player.y)
+                    {
+                        alien.y++;
+                    }
+                }
+            }
+        }
+
+        void CheckPlayer()
+        {
+            if (player.life <= 0)
+            {
+                Console.WriteLine("SEI MORTO!");
+                Console.ReadKey(false);
+
+                inGame = false;
+            }
+        }
+
         public void GameCycle()
         {
             Init();
@@ -186,8 +266,13 @@ namespace NotDeadSpace
             do
             {
                 Render();
-                Input();
 
+                CheckPlayer();
+
+                Input();
+                AI();
+
+                
             } while (inGame);
         }
     }
