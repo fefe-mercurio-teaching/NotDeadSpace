@@ -25,8 +25,8 @@ namespace NotDeadSpace
             //Item tessera = new Item("Tessera d'accesso", 0, 0f);
             //tessera.SetPosition(5, 5);
 
-            player.x = 2;
-            player.y = 3;
+            player.position.x = 2;
+            player.position.y = 3;
 
             for (int mapY = 1; mapY < map.GetLength(1) - 1; mapY++)
             {
@@ -114,18 +114,19 @@ namespace NotDeadSpace
 
             foreach(Item item in worldItems)
             {
-                if (item.x == player.x && item.y == player.y)
+                //if (item.position.x == player.position.x && item.position.y == player.position.y) 
+                if (item.position.IsHere(player.position.x, player.position.y))
                 {
                     Console.WriteLine("Qui c'è: " + item.name);
                 }
             }
         }
 
-        Alien GetAlienAtPosition(int x, int y)
+        Alien GetAlienAtPosition(Position position)
         {
             foreach (Alien alien in aliens)
             {
-                if (alien.IsHere(x, y))
+                if (alien.IsHere(position.x, position.y))
                 {
                     return alien;
                 }
@@ -146,8 +147,7 @@ namespace NotDeadSpace
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
             // La nuova posizione assunta dal giocatore nel caso di spostamento
-            int newX = player.x;
-            int newY = player.y;
+            Position newPosition = player.position;
             
             if (keyInfo.Key == ConsoleKey.Escape)
             {
@@ -155,7 +155,7 @@ namespace NotDeadSpace
             }
             else if (keyInfo.Key == ConsoleKey.W || keyInfo.Key == ConsoleKey.UpArrow)
             {
-                newY--;
+                newPosition.y--;
                 //if (player.y > 0 && map[player.x, player.y - 1] == TileType.Floor)
                 //{
                 //    Alien alienFound = GetAlienAtPosition(player.x, player.y - 1);
@@ -172,7 +172,7 @@ namespace NotDeadSpace
             }
             else if (keyInfo.Key == ConsoleKey.S || keyInfo.Key == ConsoleKey.DownArrow)
             {
-                newY++;
+                newPosition.y++;
                 //if (player.y < map.GetLength(1) - 1 && map[player.x, player.y + 1] == TileType.Floor)
                 //{
                 //    Alien alienFound = GetAlienAtPosition(player.x, player.y + 1);
@@ -189,7 +189,7 @@ namespace NotDeadSpace
             }
             else if (keyInfo.Key == ConsoleKey.A || keyInfo.Key == ConsoleKey.LeftArrow)
             {
-                newX--;
+                newPosition.x--;
                 //if (player.x > 0 && map[player.x - 1, player.y] == TileType.Floor)
                 //{
                 //    Alien alienFound = GetAlienAtPosition(player.x - 1, player.y);
@@ -206,7 +206,7 @@ namespace NotDeadSpace
             }
             else if (keyInfo.Key == ConsoleKey.D || keyInfo.Key == ConsoleKey.RightArrow)
             {
-                newX++;
+                newPosition.x++;
                 //if (player.x < map.GetLength(0) - 1 && map[player.x + 1, player.y] == TileType.Floor)
                 //{
                 //    Alien alienFound = GetAlienAtPosition(player.x + 1, player.y);
@@ -231,22 +231,21 @@ namespace NotDeadSpace
             }
 
             // Se newX è diverso da player.x O newY è diverso da player.y
-            if (player.x != newX || player.y != newY)
+            if (player.position.x != newPosition.x || player.position.y != newPosition.y)
             {
-                newX = Math.Clamp(newX, 0, map.GetLength(0) - 1); // Fa in modo che newX sia compreso tra 0 e map.GetLength(0) - 1
-                newY = Math.Clamp(newY, 0, map.GetLength(1) - 1); // Come sopra
+                newPosition.x = Math.Clamp(newPosition.x, 0, map.GetLength(0) - 1); // Fa in modo che newX sia compreso tra 0 e map.GetLength(0) - 1
+                newPosition.y = Math.Clamp(newPosition.y, 0, map.GetLength(1) - 1); // Come sopra
 
-                if (map[newX, newY] == TileType.Floor)
+                if (map[newPosition.x, newPosition.y] == TileType.Floor)
                 {
-                    Alien alienFound = GetAlienAtPosition(newX, newY); // Controlla se è presente un alieno nella posizione che si sta per raggiungere
+                    Alien alienFound = GetAlienAtPosition(newPosition); // Controlla se è presente un alieno nella posizione che si sta per raggiungere
                     if (alienFound != null)
                     {
                         alienFound.Damage(player.damage); // Attacca l'alieno
                     }
                     else
                     {
-                        player.x = newX; // Cambia la posizione reale del giocatore
-                        player.y = newY; // Come sopra
+                        player.position = newPosition; // Cambia la posizione reale del giocatore
                     }
                 }
             }

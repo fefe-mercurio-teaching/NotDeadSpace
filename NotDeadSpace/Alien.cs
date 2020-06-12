@@ -4,25 +4,24 @@ using System.Text;
 
 namespace NotDeadSpace
 {
-    class Alien
+    class Alien : Entity
     {
         int life = 3;
         int xp = 50;
         List<Item> items = new List<Item>();
         
-        public int x;
-        public int y;
         public int damage = 1;
 
         public Alien(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            position.x = x;
+            position.y = y;
         }
 
         public bool IsHere(int x, int y)
         {
-            return this.x == x && this.y == y;
+            return position.IsHere(x, y);                   // Le due righe sono equivalenti
+            //return position.x == x && position.y == y;
         }
 
         public void Damage(int amount)

@@ -4,14 +4,11 @@ using System.Text;
 
 namespace NotDeadSpace
 {
-    class Item
+    class Item : Entity
     {
         public string name { get; private set; }
         int cost;
         float weight;
-
-        public int x { get; private set; }
-        public int y { get; private set; }
 
         public Item(string name, int cost, float weight)
         {

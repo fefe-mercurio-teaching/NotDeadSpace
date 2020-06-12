@@ -4,10 +4,8 @@ using System.Text;
 
 namespace NotDeadSpace
 {
-    class Player
+    class Player : Entity
     {
-        public int x;
-        public int y;
         public int life = 10;
         public int maxLife = 10;
         public int damage = 1;
