@@ -16,13 +16,13 @@ namespace NotDeadSpace
             this.cost = cost;
             this.weight = weight;
 
-            x = y = 0;
+            position = new Position();
         }
 
         public void SetPosition(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            position.x = x;
+            position.y = y;
         }
 
 

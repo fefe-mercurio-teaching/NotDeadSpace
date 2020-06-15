@@ -45,7 +45,8 @@ namespace NotDeadSpace
         {
             foreach(Item item in worldItems)
             {
-                if (item.x == mapX && item.y == mapY)
+                //if (item.position.x == mapX && item.position.y == mapY)
+                if (item.position.IsHere(mapX, mapY))
                 {
                     return true;
                 }
@@ -58,7 +59,7 @@ namespace NotDeadSpace
         {
             foreach(Alien alien in aliens)
             {
-                if (alien.x == mapX && alien.y == mapY)
+                if (alien.position.IsHere(mapX, mapY))
                 {
                     return true;
                 }
@@ -115,7 +116,7 @@ namespace NotDeadSpace
             foreach(Item item in worldItems)
             {
                 //if (item.position.x == player.position.x && item.position.y == player.position.y) 
-                if (item.position.IsHere(player.position.x, player.position.y))
+                if (item.position.IsHere(player.position))
                 {
                     Console.WriteLine("Qui c'è: " + item.name);
                 }
@@ -259,7 +260,8 @@ namespace NotDeadSpace
 
             foreach (Item item in worldItems)
             {
-                if (item.x == player.x && item.y == player.y)
+                //if (item.x == player.x && item.y == player.y)
+                if (item.position.IsHere(player.position))
                 {
                     inventory.Add(item);
                     itemsToRemove.Add(item); // Non posso fare worldItems.Remove perché il ciclo foreach è sulla lista worldItems
@@ -299,6 +301,7 @@ namespace NotDeadSpace
         {
             List<Alien> aliensToRemove = new List<Alien>();
 
+
             foreach (Alien alien in aliens)
             {
                 if (alien.IsDead)
@@ -308,28 +311,28 @@ namespace NotDeadSpace
                 }
                 else
                 {
-                    if (Math.Abs(alien.x - player.x) <= 1 && Math.Abs(alien.y - player.y) <= 1)
+                    if (Math.Abs(alien.position.x - player.position.x) <= 1 && Math.Abs(alien.position.y - player.position.y) <= 1)
                     {
                         player.life -= alien.damage;
                     }
                     else
                     {
-                        if (alien.x > player.x)
+                        if (alien.position.x > player.position.x)
                         {
-                            alien.x--;
+                            alien.position.x--;
                         }
-                        else if (alien.x < player.x)
+                        else if (alien.position.x < player.position.x)
                         {
-                            alien.x++;
+                            alien.position.x++;
                         }
 
-                        if (alien.y > player.y)
+                        if (alien.position.y > player.position.y)
                         {
-                            alien.y--;
+                            alien.position.y--;
                         }
-                        else if (alien.y < player.y)
+                        else if (alien.position.y < player.position.y)
                         {
-                            alien.y++;
+                            alien.position.y++;
                         }
                     }
                 }
@@ -342,7 +345,7 @@ namespace NotDeadSpace
                 // Aggiunge tutti gli oggetti che l'alieno possedeva alla lista worldItems
                 foreach (Item item in alien.GetItems())
                 {
-                    item.SetPosition(alien.x, alien.y); // Gli oggetti sono posizionati dove si trovava l'alieno
+                    item.SetPosition(alien.position.x, alien.position.y); // Gli oggetti sono posizionati dove si trovava l'alieno
                     worldItems.Add(item);
                 }
                 

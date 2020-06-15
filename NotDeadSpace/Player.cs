@@ -31,7 +31,8 @@ namespace NotDeadSpace
 
         public bool IsHere(int mapX, int mapY)
         {
-            return x == mapX && y == mapY;
+            return position.IsHere(mapX, mapY);
+            //return x == mapX && y == mapY;
         }
 
         public void AddXP(int amount)
